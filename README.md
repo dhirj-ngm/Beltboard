@@ -56,6 +56,35 @@ npm test       # the board's rules: entries, editing, completion, validation, re
 
 Electron downloads its own binary the first time it runs.
 
+## Shipping to the client
+
+The Windows installer is built by GitHub Actions on a real Windows machine
+(`.github/workflows/release.yml`), not locally — the NSIS installer step needs
+Windows.
+
+```
+# 1. bump "version" in package.json and commit it, then:
+git tag v0.1.0
+git push origin main --tags
+
+# 2. wait for the build (a few minutes)
+gh run watch
+
+# 3. the installer is attached to a DRAFT release — invisible until published
+gh release view v0.1.0
+
+# 4. ship it: publishing makes the download link public
+gh release edit v0.1.0 --draft=false
+```
+
+The client downloads `BeltBoard-Setup-<version>.exe` from the release page and
+runs it: it installs for the current user, puts a shortcut on the desktop, opens
+the app, and starts it automatically every time Windows signs in.
+
+Windows may show a *"Windows protected your PC"* warning, because the installer
+is not code-signed. **More info → Run anyway** gets past it. Signing needs a paid
+certificate and can be added later.
+
 ## Layout
 
 ```

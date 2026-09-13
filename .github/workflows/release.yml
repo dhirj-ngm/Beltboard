@@ -1,0 +1,49 @@
+# Builds the Windows installer on a real Windows machine and attaches it to a
+# DRAFT GitHub release. Drafts are invisible to the public until published, so a
+# build never reaches the client by accident.
+#
+# Ship a version:
+#   1. bump "version" in package.json and commit
+#   2. git tag v<version> && git push --tags
+#   3. check the draft:   gh release view v<version>
+#   4. publish it:        gh release edit v<version> --draft=false
+#
+# Built here rather than locally because the NSIS installer step needs Windows
+# (or Wine), and building on Windows also gives the .exe its proper metadata.
+
+name: Windows installer
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - name: Test the board rules
+        run: npm test
+
+      - name: Build installer and attach it to a draft release
+        run: npx electron-builder --win --publish always
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Keep a copy on the workflow run too
+        uses: actions/upload-artifact@v4
+        with:
+          name: BeltBoard-Setup
+          path: dist/*.exe

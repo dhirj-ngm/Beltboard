@@ -32,8 +32,7 @@
             "x64"
           ]
         }
-      ],
-      "signAndEditExecutable": false
+      ]
     },
     "nsis": {
       "oneClick": true,
@@ -41,6 +40,16 @@
       "createDesktopShortcut": true,
       "runAfterFinish": true,
       "artifactName": "BeltBoard-Setup-${version}.exe"
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "dhirj-ngm",
+      "repo": "Beltboard",
+      "releaseType": "draft"
     }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dhirj-ngm/Beltboard.git"
   }
 }
