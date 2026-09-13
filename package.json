@@ -6,9 +6,41 @@
   "main": "src/main.js",
   "scripts": {
     "start": "electron .",
-    "test": "node --test tests/"
+    "test": "node --test tests/",
+    "dist:win": "electron-builder --win"
   },
   "devDependencies": {
-    "electron": "44.3.0"
+    "electron": "44.3.0",
+    "electron-builder": "26.15.3"
+  },
+  "author": "dheeraj",
+  "build": {
+    "appId": "com.dhirjngm.beltboard",
+    "productName": "Belt Board",
+    "files": [
+      "src/**/*",
+      "package.json"
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "signAndEditExecutable": false
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "createDesktopShortcut": true,
+      "runAfterFinish": true,
+      "artifactName": "BeltBoard-Setup-${version}.exe"
+    }
   }
 }
