@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'">
+    <title>Belt Board</title>
+    <link rel="stylesheet" href="board.css">
+  </head>
+  <body>
+    <div class="top">
+      <span class="board-name">PRODUCTION BOARD</span>
+      <span class="clock num" id="clock"></span>
+    </div>
+
+    <div class="cols" role="row">
+      <span role="columnheader">BELT</span>
+      <span role="columnheader">SIZE</span>
+      <span role="columnheader">MACHINE</span>
+      <span role="columnheader">MODEL NO.</span>
+      <span role="columnheader">STATUS</span>
+    </div>
+
+    <div class="rows" id="rows" role="rowgroup"></div>
+
+    <div class="ticker" aria-hidden="true">
+      <div class="ticker-track">
+        <span>SAFETY FIRST &nbsp;·&nbsp; KEEP WALKWAYS CLEAR &nbsp;·&nbsp; WEAR PROTECTIVE GEAR ON THE FLOOR</span>
+        <span>SAFETY FIRST &nbsp;·&nbsp; KEEP WALKWAYS CLEAR &nbsp;·&nbsp; WEAR PROTECTIVE GEAR ON THE FLOOR</span>
+      </div>
+    </div>
+
+    <script src="board.js"></script>
+  </body>
+</html>

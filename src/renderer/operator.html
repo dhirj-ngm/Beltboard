@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'">
+    <title>Belt Board — Operator</title>
+    <link rel="stylesheet" href="operator.css">
+  </head>
+  <body>
+    <header class="bar">
+      <h1 class="app-name">Belt Board</h1>
+      <div class="bar-meta">
+        <span class="tv" id="tv" data-connected="unknown">Checking for the TV…</span>
+        <span class="clock" id="clock"></span>
+      </div>
+    </header>
+
+    <main class="layout">
+      <nav class="belts" id="belts" aria-label="Belts"></nav>
+
+      <section class="panel" aria-labelledby="belt-title">
+        <p class="eyebrow" id="belt-label">Belt 01</p>
+        <h2 class="title" id="belt-title">No machine on this belt</h2>
+        <p class="note" id="belt-note"></p>
+
+        <form id="entry-form" class="form" novalidate>
+          <div class="field">
+            <label for="size">Belt size</label>
+            <input id="size" name="size" inputmode="decimal" autocomplete="off" maxlength="8" required>
+          </div>
+          <div class="field">
+            <label for="machine">Machine</label>
+            <input id="machine" name="machine" list="machine-list" autocomplete="off" maxlength="40" required>
+          </div>
+          <div class="field">
+            <label for="model">Model no.</label>
+            <input id="model" name="model" list="model-list" autocomplete="off" maxlength="40" required>
+          </div>
+          <datalist id="machine-list"></datalist>
+          <datalist id="model-list"></datalist>
+
+          <p class="message" id="message" role="status" aria-live="polite"></p>
+
+          <div class="actions">
+            <button type="submit" class="button primary" id="save">Put on board</button>
+            <button type="button" class="button complete" id="complete" hidden>Mark completed</button>
+            <button type="button" class="button quiet" id="clear" hidden>Clear belt</button>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <script src="operator.js"></script>
+  </body>
+</html>

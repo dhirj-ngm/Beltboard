@@ -1,0 +1,175 @@
+/* Bundled, not fetched: the operator's PC may have no internet, and a board
+   that falls back to a plain font on the day the line is down looks broken. */
+@font-face {
+  font-family: "DotGothic16";
+  src: url("fonts/DotGothic16-Regular.ttf") format("truetype");
+  font-display: block;
+}
+
+@font-face {
+  font-family: "Share Tech Mono";
+  src: url("fonts/ShareTechMono-Regular.ttf") format("truetype");
+  font-display: block;
+}
+
+:root {
+  --screen: #050506;
+  --led: #ffb52e;
+  --led-glow: rgba(255, 181, 46, 0.42);
+  --led-dim: #4d3a16;
+  --led-green: #4be08a;
+  --led-green-glow: rgba(75, 224, 138, 0.42);
+  --band: #6e1b12;
+  --band-text: #f6e7c9;
+  --row-alt: #0b0a07;
+  --rule: #17130b;
+  --led-font: "DotGothic16", "Share Tech Mono", monospace;
+  --ui-font: "Share Tech Mono", monospace;
+  /* One unit = 1% of a 16:9 screen's width, capped by height so a TV with a
+     different shape still fits every row. */
+  --u: min(1vw, 1.7778vh);
+  color-scheme: dark;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--screen);
+  cursor: none;
+}
+
+body {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+}
+
+/* The gaps between LED pixels. */
+body::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(circle, transparent 52%, rgba(0, 0, 0, 0.5) 55%);
+  background-size: calc(var(--u) * 0.32) calc(var(--u) * 0.32);
+}
+
+.num {
+  font-variant-numeric: tabular-nums;
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: calc(var(--u) * 1.4) calc(var(--u) * 2.2);
+  font-family: var(--led-font);
+  color: var(--led);
+  text-shadow: 0 0 calc(var(--u) * 0.6) var(--led-glow);
+  border-bottom: calc(var(--u) * 0.15) solid var(--rule);
+}
+
+.board-name {
+  font-size: calc(var(--u) * 2.6);
+  letter-spacing: 0.12em;
+}
+
+.clock {
+  font-size: calc(var(--u) * 2.1);
+  letter-spacing: 0.08em;
+}
+
+.cols,
+.row {
+  display: grid;
+  grid-template-columns: 0.75fr 1fr 3fr 1.7fr 2.7fr;
+  column-gap: var(--u);
+  align-items: center;
+  padding-inline: calc(var(--u) * 2.2);
+}
+
+.cols {
+  padding-block: calc(var(--u) * 0.9);
+  background: var(--band);
+  color: var(--band-text);
+  font-family: var(--ui-font);
+  font-size: calc(var(--u) * 1.45);
+  letter-spacing: 0.14em;
+}
+
+.rows {
+  display: grid;
+}
+
+.row {
+  font-family: var(--led-font);
+  font-size: calc(var(--u) * 2.2);
+  letter-spacing: 0.05em;
+  color: var(--led);
+  text-shadow: 0 0 calc(var(--u) * 0.55) var(--led-glow);
+  border-bottom: calc(var(--u) * 0.08) solid var(--rule);
+  white-space: nowrap;
+}
+
+.row:nth-child(even) {
+  background: var(--row-alt);
+}
+
+.row > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.row .status.done {
+  color: var(--led-green);
+  text-shadow: 0 0 calc(var(--u) * 0.55) var(--led-green-glow);
+}
+
+.row.empty > span:not(.belt) {
+  color: var(--led-dim);
+  text-shadow: none;
+}
+
+/* A changed row blinks a few times, the way a station board flags an arrival. */
+.row.flash > span {
+  animation: blink 0.5s steps(1) 5;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0.12;
+  }
+}
+
+.ticker {
+  overflow: hidden;
+  padding-block: calc(var(--u) * 0.8);
+  border-top: calc(var(--u) * 0.15) solid var(--rule);
+  font-family: var(--led-font);
+  font-size: calc(var(--u) * 1.7);
+  color: var(--led);
+  text-shadow: 0 0 calc(var(--u) * 0.5) var(--led-glow);
+  white-space: nowrap;
+}
+
+.ticker-track {
+  display: inline-flex;
+  gap: calc(var(--u) * 10);
+  padding-left: calc(var(--u) * 2.2);
+  animation: marquee 42s linear infinite;
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ticker-track,
+  .row.flash > span {
+    animation: none;
+  }
+}
