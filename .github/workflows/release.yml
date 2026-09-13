@@ -37,7 +37,20 @@ jobs:
       - name: Test the board rules
         run: npm test
 
-      - name: Build installer and attach it to a draft release
+      # The draft must exist before electron-builder publishes. Otherwise it
+      # uploads the installer and its blockmap in parallel, each finds no release,
+      # each creates one — and the installer ends up on a duplicate draft while the
+      # release you look at holds only the blockmap. That happened on v0.1.0.
+      - name: Make sure the draft release exists
+        shell: bash
+        run: |
+          VERSION="v$(node -p "require('./package.json').version")"
+          gh release view "$VERSION" >/dev/null 2>&1 \
+            || gh release create "$VERSION" --draft --title "Belt Board $VERSION" --notes "Windows installer for Belt Board $VERSION."
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build installer and attach it to the draft release
         run: npx electron-builder --win --publish always
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
